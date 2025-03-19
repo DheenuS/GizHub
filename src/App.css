@@ -1,0 +1,16 @@
+a.active {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: .5em;
+  }
+  
+  a.active:nth-child(2) {
+    border-radius: 10px;
+    text-decoration: none;
+    text-decoration: underline;
+    text-underline-offset: .5em;
+}
+
+html, body {
+  scroll-behavior: smooth;
+}
