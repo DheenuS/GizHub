@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -11,7 +11,13 @@ import ViewCart from "./pages/ViewCart";
 import Products from "./pages/Products";
 
 function App() {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    return JSON.parse(localStorage.getItem("cart")) || [];  
+  });
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart)); 
+  }, [cart]);
 
   return (
     <>
@@ -22,7 +28,6 @@ function App() {
             <Routes>
               <Route path="/" element={<Products/>}></Route>
               <Route path="/cart" element={<ViewCart/>}></Route>
-              {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>
             <Footer/> 
           </BrowserRouter>

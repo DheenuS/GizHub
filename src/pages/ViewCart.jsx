@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../Context/CartContext";
+import emptyCartIcon from "/assets/Icons/empty-cart.png";
 
 const ViewCart = () => {
   const { cart, setCart } = useContext(CartContext);
@@ -8,21 +9,21 @@ const ViewCart = () => {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(storedCart);
+  }, [setCart]);
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
 
     const totalAmount = cart.reduce((acc, item) => {
-
       const numericPrice = String(item.price).replace(/[^0-9.]/g, "");
-
       const priceValue = parseInt(numericPrice) || 0;
-
       return acc + priceValue * (item.quantity || 1);
-
     }, 0);
 
     setTotal(totalAmount.toFixed(2));
-
   }, [cart]);
-
 
   const removeCart = (itemToRemove) => {
     setCart((prevCart) =>
@@ -38,7 +39,7 @@ const ViewCart = () => {
       <main className="px-4 lg:px-10 flex flex-col gap-2 min-h-[626px]">
         <p className="text-end text-white text-[16px] py-4 sm:py-4">
           Total Amount:
-          <span className="text-violet-600 font-semibold"> ₹{total}</span>
+          <span className=" font-normal"> ₹{total}</span>
         </p>
         <article className="border-2 border-gray-600 rounded-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 p-4 max-w-full">
           {cart.length > 0 ? (
@@ -48,8 +49,9 @@ const ViewCart = () => {
                 className="bg-white px-4 py-2 min-w-[100px] max-w-full min-h-[150px] max-h-full rounded-md"
               >
                 <img
-                  src={`src/assets/Images/${c.image}`}
+                  src={c.image}
                   alt={c.title}
+                  loading="lazy"
                   className="w-full max-h-[150px] object-contain hover:scale-110 transition-transform duration-300 delay-100 p-2"
                 />
                 <div className="mt-4 text-center">
@@ -74,8 +76,9 @@ const ViewCart = () => {
                 Cart is Empty...
               </p>
               <img
-                src="src/assets/Icons/empty-cart.png"
+                src={emptyCartIcon}
                 alt="empty-cart"
+                loading="lazy"
                 className="w-full h-auto"
               />
               <button
